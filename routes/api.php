@@ -43,4 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/machines/{machine}/toggle-maintenance', [MachineController::class, 'toggleMaintenance']);
     Route::get('/machines/type/{type}', [MachineController::class, 'getByType']);
     Route::get('/machines/status/{status}', [MachineController::class, 'getByStatus']);
+
+    // ProjectItem resource routes with sanctum middleware
+    Route::apiResource('project-items', \App\Http\Controllers\ProjectItemController::class);
 });
