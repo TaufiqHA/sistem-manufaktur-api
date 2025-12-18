@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             MaterialSeeder::class,
             MachineSeeder::class,
+            BomItemSeeder::class,
         ]);
     }
 }

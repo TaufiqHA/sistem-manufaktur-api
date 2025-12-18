@@ -46,4 +46,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // ProjectItem resource routes with sanctum middleware
     Route::apiResource('project-items', \App\Http\Controllers\ProjectItemController::class);
+
+    // BomItem resource routes with sanctum middleware
+    Route::apiResource('bom-items', \App\Http\Controllers\BomItemController::class);
+
+    // Additional BomItem route for getting items by project item ID
+    Route::get('/bom-items-by-project-item/{projectItemId}', [\App\Http\Controllers\BomItemController::class, 'getByProjectItem']);
 });
