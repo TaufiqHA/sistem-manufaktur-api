@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             MachineSeeder::class,
             BomItemSeeder::class,
             TaskSeeder::class,
+            ProductionLogSeeder::class,
         ]);
     }
 }

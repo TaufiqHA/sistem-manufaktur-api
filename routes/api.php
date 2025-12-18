@@ -63,4 +63,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/tasks/{task}/start-downtime', [TaskController::class, 'startDowntime']);
     Route::post('/tasks/{task}/end-downtime', [TaskController::class, 'endDowntime']);
     Route::get('/tasks-statistics', [TaskController::class, 'statistics']);
+
+    // Production Log resource routes with sanctum middleware
+    Route::apiResource('production-logs', \App\Http\Controllers\ProductionLogController::class);
+
+    // Additional production log routes
+    Route::get('/production-logs/project/{projectId}', [\App\Http\Controllers\ProductionLogController::class, 'getByProject']);
+    Route::get('/production-logs/machine/{machineId}', [\App\Http\Controllers\ProductionLogController::class, 'getByMachine']);
+    Route::get('/production-summary', [\App\Http\Controllers\ProductionLogController::class, 'getProductionSummary']);
 });
