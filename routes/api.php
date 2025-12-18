@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\MachineController;
 
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -34,4 +35,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Additional material routes
     Route::patch('/materials/{material}/stock', [MaterialController::class, 'updateStock']);
     Route::get('/materials-low-stock', [MaterialController::class, 'lowStock']);
+
+    // Machine resource routes with sanctum middleware
+    Route::apiResource('machines', MachineController::class);
+
+    // Additional machine routes
+    Route::patch('/machines/{machine}/toggle-maintenance', [MachineController::class, 'toggleMaintenance']);
+    Route::get('/machines/type/{type}', [MachineController::class, 'getByType']);
+    Route::get('/machines/status/{status}', [MachineController::class, 'getByStatus']);
 });
