@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\MachineController;
+use App\Http\Controllers\TaskController;
 
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -52,4 +53,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Additional BomItem route for getting items by project item ID
     Route::get('/bom-items-by-project-item/{projectItemId}', [\App\Http\Controllers\BomItemController::class, 'getByProjectItem']);
+
+    // Task resource routes with sanctum middleware
+    Route::apiResource('tasks', TaskController::class);
+
+    // Additional task routes
+    Route::patch('/tasks/{task}/status', [TaskController::class, 'updateStatus']);
+    Route::patch('/tasks/{task}/quantities', [TaskController::class, 'updateQuantities']);
+    Route::post('/tasks/{task}/start-downtime', [TaskController::class, 'startDowntime']);
+    Route::post('/tasks/{task}/end-downtime', [TaskController::class, 'endDowntime']);
+    Route::get('/tasks-statistics', [TaskController::class, 'statistics']);
 });

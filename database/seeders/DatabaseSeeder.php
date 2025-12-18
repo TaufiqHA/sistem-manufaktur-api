@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             MaterialSeeder::class,
             MachineSeeder::class,
             BomItemSeeder::class,
+            TaskSeeder::class,
         ]);
     }
 }
