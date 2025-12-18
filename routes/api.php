@@ -2,23 +2,36 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\MaterialController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Authentication routes
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
-// User resource routes with sanctum middleware
-Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
+// Protected routes (require authentication)
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', [AuthController::class, 'profile']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/refresh', [AuthController::class, 'refresh']);
 
-// Project resource routes with sanctum middleware
-Route::apiResource('projects', ProjectController::class)->middleware('auth:sanctum');
+    // Existing protected routes
+    Route::get('/user-profile', function (Request $request) {
+        return $request->user();
+    });
 
-// Material resource routes with sanctum middleware
-Route::apiResource('materials', MaterialController::class)->middleware('auth:sanctum');
+    // User resource routes with sanctum middleware
+    Route::apiResource('users', UserController::class);
 
-// Additional material routes
-Route::patch('/materials/{material}/stock', [MaterialController::class, 'updateStock'])->middleware('auth:sanctum');
-Route::get('/materials-low-stock', [MaterialController::class, 'lowStock'])->middleware('auth:sanctum');
+    // Project resource routes with sanctum middleware
+    Route::apiResource('projects', ProjectController::class);
+
+    // Material resource routes with sanctum middleware
+    Route::apiResource('materials', MaterialController::class);
+
+    // Additional material routes
+    Route::patch('/materials/{material}/stock', [MaterialController::class, 'updateStock']);
+    Route::get('/materials-low-stock', [MaterialController::class, 'lowStock']);
+});

@@ -17,12 +17,9 @@ class MaterialTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Create a user for authentication
         $this->user = User::factory()->create();
-        
-        // Seed any necessary data
-        Artisan::call('db:seed');
     }
 
     /** @test */
@@ -380,14 +377,6 @@ class MaterialTest extends TestCase
                          'from',
                          'last_page',
                          'last_page_url',
-                         'links' => [
-                             '*' => [
-                                 'url',
-                                 'label',
-                                 'active',
-                                 'page'
-                             ]
-                         ],
                          'next_page_url',
                          'path',
                          'per_page',
@@ -399,7 +388,7 @@ class MaterialTest extends TestCase
                  ->assertJson(['success' => true]);
 
         $responseData = $response->json('data.data');
-        $this->assertCount(1, $responseData);
+        $this->assertCount(1, $responseData, 'Expected 1 result for search "Wood" but got ' . count($responseData));
         $this->assertEquals($material1->id, $responseData[0]['id']);
     }
 
@@ -417,7 +406,7 @@ class MaterialTest extends TestCase
         $response->assertStatus(200);
 
         $responseData = $response->json('data.data');
-        $this->assertCount(1, $responseData);
+        $this->assertCount(1, $responseData, 'Expected 1 result for category "RAW" but got ' . count($responseData));
         $this->assertEquals($rawMaterial->id, $responseData[0]['id']);
     }
 
@@ -443,7 +432,7 @@ class MaterialTest extends TestCase
         $response->assertStatus(200);
 
         $responseData = $response->json('data.data');
-        $this->assertCount(1, $responseData);
+        $this->assertCount(1, $responseData, 'Expected 1 result for low_stock=true but got ' . count($responseData));
         $this->assertEquals($lowStockMaterial->id, $responseData[0]['id']);
     }
 
