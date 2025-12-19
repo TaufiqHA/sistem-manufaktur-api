@@ -99,28 +99,12 @@ class UserController extends Controller
             $rules['permissions'] = 'sometimes|array';
         }
 
-        Log::info('Validating user data', [
-            'request_data' => $request->all(),
-            'validation_rules' => $rules,
-            'is_update' => $isUpdate,
-            'user_id' => $user?->id
-        ]);
-
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            Log::error('Validation failed', [
-                'errors' => $validator->errors()->toArray(),
-                'request_data' => $request->all()
-            ]);
-
             // Throw a ValidationException which Laravel handles automatically
             throw new \Illuminate\Validation\ValidationException($validator);
         }
-
-        Log::info('Validation passed', [
-            'validated_data' => $validator->validated()
-        ]);
 
         return $validator->validated();
     }
