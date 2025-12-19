@@ -74,4 +74,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/production-logs/project/{projectId}', [\App\Http\Controllers\ProductionLogController::class, 'getByProject']);
     Route::get('/production-logs/machine/{machineId}', [\App\Http\Controllers\ProductionLogController::class, 'getByMachine']);
     Route::get('/production-summary', [\App\Http\Controllers\ProductionLogController::class, 'getProductionSummary']);
+
+    // Backup routes
+    Route::prefix('backups')->group(function () {
+        Route::get('/', [\App\Http\Controllers\BackupController::class, 'index']);
+        Route::post('/', [\App\Http\Controllers\BackupController::class, 'store']);
+        Route::get('/stats', [\App\Http\Controllers\BackupController::class, 'stats']);
+        Route::get('/{id}', [\App\Http\Controllers\BackupController::class, 'show']);
+        Route::put('/{id}', [\App\Http\Controllers\BackupController::class, 'update']);
+        Route::patch('/{id}', [\App\Http\Controllers\BackupController::class, 'update']);
+        Route::delete('/{id}', [\App\Http\Controllers\BackupController::class, 'destroy']);
+        Route::get('/{id}/download', [\App\Http\Controllers\BackupController::class, 'download']);
+    });
 });
