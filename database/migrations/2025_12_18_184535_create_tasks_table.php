@@ -44,6 +44,7 @@ return new class extends Migration
             $table->integer('target_qty');
             $table->integer('completed_qty')->default(0);
             $table->integer('defect_qty')->default(0);
+            $table->string('shift')->nullable();
 
             // Status & downtime
             $table->string('status'); 

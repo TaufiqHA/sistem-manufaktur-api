@@ -33,6 +33,10 @@ class TaskController extends Controller
             $query->where('machine_id', $request->machine_id);
         }
 
+        if ($request->has('shift')) {
+            $query->where('shift', $request->shift);
+        }
+
         $tasks = $query->with(['project', 'projectItem', 'machine'])->paginate(
             $request->get('per_page', 15)
         );
@@ -58,6 +62,7 @@ class TaskController extends Controller
             'target_qty' => 'required|integer|min:1',
             'completed_qty' => 'nullable|integer|min:0',
             'defect_qty' => 'nullable|integer|min:0',
+            'shift' => 'nullable|string|max:50',
             'status' => 'required|string|in:PENDING,IN_PROGRESS,PAUSED,COMPLETED,DOWNTIME',
             'downtime_start' => 'nullable|date',
             'total_downtime_minutes' => 'nullable|integer|min:0',
@@ -120,6 +125,7 @@ class TaskController extends Controller
             'target_qty' => 'sometimes|integer|min:1',
             'completed_qty' => 'sometimes|integer|min:0',
             'defect_qty' => 'sometimes|integer|min:0',
+            'shift' => 'sometimes|nullable|string|max:50',
             'status' => 'sometimes|string|in:PENDING,IN_PROGRESS,PAUSED,COMPLETED,DOWNTIME',
             'downtime_start' => 'nullable|date',
             'total_downtime_minutes' => 'nullable|integer|min:0',

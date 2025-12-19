@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
@@ -14,31 +12,20 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): JsonResponse|View
+    public function index(Request $request): JsonResponse
     {
         $projects = Project::orderBy('created_at', 'desc')->get();
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'data' => $projects
-            ]);
-        }
-
-        return view('projects.index', compact('projects'));
+        return response()->json([
+            'data' => $projects
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
-    {
-        return view('projects.create');
-    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse|RedirectResponse
+    public function store(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
             'code' => 'required|string|max:255|unique:projects,code',
@@ -57,60 +44,40 @@ class ProjectController extends Controller
 
         // Additional validation for date relationship
         if (strtotime($validatedData['start_date']) > strtotime($validatedData['deadline'])) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'message' => 'The start date must be before or equal to the deadline.',
-                    'errors' => [
-                        'start_date' => ['The start date must be before or equal to the deadline.'],
-                        'deadline' => ['The deadline must be after or equal to the start date.']
-                    ]
-                ], 422);
-            } else {
-                $request->session()->flash('error', 'The start date must be before or equal to the deadline.');
-                return back()->withErrors(['start_date' => 'The start date must be before or equal to the deadline.']);
-            }
+            return response()->json([
+                'message' => 'The start date must be before or equal to the deadline.',
+                'errors' => [
+                    'start_date' => ['The start date must be before or equal to the deadline.'],
+                    'deadline' => ['The deadline must be after or equal to the start date.']
+                ]
+            ], 422);
         }
 
         $validatedData['is_locked'] = $validatedData['is_locked'] ?? false;
 
         $project = Project::create($validatedData);
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'message' => 'Project created successfully.',
-                'data' => $project
-            ], Response::HTTP_CREATED);
-        }
-
-        return redirect()->route('projects.index')->with('success', 'Project created successfully.');
+        return response()->json([
+            'message' => 'Project created successfully.',
+            'data' => $project
+        ], Response::HTTP_CREATED);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Project $project, Request $request): JsonResponse|View
+    public function show(Project $project, Request $request): JsonResponse
     {
-        if ($request->expectsJson()) {
-            return response()->json([
-                'data' => $project
-            ]);
-        }
-
-        return view('projects.show', compact('project'));
+        return response()->json([
+            'data' => $project
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Project $project): View
-    {
-        return view('projects.edit', compact('project'));
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project): JsonResponse|RedirectResponse
+    public function update(Request $request, Project $project): JsonResponse
     {
         $validatedData = $request->validate([
             'code' => 'required|string|max:255|unique:projects,code,' . $project->id,
@@ -129,46 +96,33 @@ class ProjectController extends Controller
 
         // Additional validation for date relationship
         if (strtotime($validatedData['start_date']) > strtotime($validatedData['deadline'])) {
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'message' => 'The start date must be before or equal to the deadline.',
-                    'errors' => [
-                        'start_date' => ['The start date must be before or equal to the deadline.'],
-                        'deadline' => ['The deadline must be after or equal to the start date.']
-                    ]
-                ], 422);
-            } else {
-                $request->session()->flash('error', 'The start date must be before or equal to the deadline.');
-                return back()->withErrors(['start_date' => 'The start date must be before or equal to the deadline.']);
-            }
+            return response()->json([
+                'message' => 'The start date must be before or equal to the deadline.',
+                'errors' => [
+                    'start_date' => ['The start date must be before or equal to the deadline.'],
+                    'deadline' => ['The deadline must be after or equal to the start date.']
+                ]
+            ], 422);
         }
 
         $project->update($validatedData);
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'message' => 'Project updated successfully.',
-                'data' => $project
-            ]);
-        }
-
-        return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
+        return response()->json([
+            'message' => 'Project updated successfully.',
+            'data' => $project
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Project $project): JsonResponse|RedirectResponse
+    public function destroy(Request $request, Project $project): JsonResponse
     {
         $project->delete();
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'message' => 'Project deleted successfully.'
-            ]);
-        }
-
-        return redirect()->route('projects.index')->with('success', 'Project deleted successfully.');
+        return response()->json([
+            'message' => 'Project deleted successfully.'
+        ]);
     }
 
     /**

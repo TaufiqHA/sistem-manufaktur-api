@@ -20,6 +20,7 @@ class Task extends Model
         'target_qty',
         'completed_qty',
         'defect_qty',
+        'shift',
         'status',
         'downtime_start',
         'total_downtime_minutes',
@@ -34,6 +35,7 @@ class Task extends Model
         'target_qty' => 'integer',
         'completed_qty' => 'integer',
         'defect_qty' => 'integer',
+        'shift' => 'string',
     ];
 
     // Relationship with Project

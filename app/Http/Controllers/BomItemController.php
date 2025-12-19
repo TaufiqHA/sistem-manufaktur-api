@@ -7,40 +7,24 @@ use App\Models\ProjectItem;
 use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 
 class BomItemController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): JsonResponse|View
+    public function index(Request $request): JsonResponse
     {
         $bomItems = BomItem::with(['item', 'material'])->paginate(10);
 
-        if ($request->expectsJson()) {
-            return response()->json($bomItems);
-        }
-
-        return view('bom-items.index', compact('bomItems'));
+        return response()->json($bomItems);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
-    {
-        $projectItems = ProjectItem::all();
-        $materials = Material::all();
-        
-        return view('bom-items.create', compact('projectItems', 'materials'));
-    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): JsonResponse|RedirectResponse
+    public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'item_id' => 'required|exists:project_items,id',
@@ -53,42 +37,24 @@ class BomItemController extends Controller
 
         $bomItem = BomItem::create($validated);
 
-        if ($request->expectsJson()) {
-            return response()->json($bomItem, 201);
-        }
-
-        return redirect()->route('bom-items.index')->with('success', 'BOM Item created successfully.');
+        return response()->json($bomItem, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(BomItem $bomItem, Request $request): JsonResponse|View
+    public function show(BomItem $bomItem, Request $request): JsonResponse
     {
         $bomItem->load(['item', 'material']);
 
-        if ($request->expectsJson()) {
-            return response()->json($bomItem);
-        }
-
-        return view('bom-items.show', compact('bomItem'));
+        return response()->json($bomItem);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(BomItem $bomItem): View
-    {
-        $projectItems = ProjectItem::all();
-        $materials = Material::all();
-        
-        return view('bom-items.edit', compact('bomItem', 'projectItems', 'materials'));
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, BomItem $bomItem): JsonResponse|RedirectResponse
+    public function update(Request $request, BomItem $bomItem): JsonResponse
     {
         $validated = $request->validate([
             'item_id' => 'sometimes|required|exists:project_items,id',
@@ -101,25 +67,17 @@ class BomItemController extends Controller
 
         $bomItem->update($validated);
 
-        if ($request->expectsJson()) {
-            return response()->json($bomItem);
-        }
-
-        return redirect()->route('bom-items.index')->with('success', 'BOM Item updated successfully.');
+        return response()->json($bomItem);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BomItem $bomItem, Request $request): JsonResponse|RedirectResponse
+    public function destroy(BomItem $bomItem, Request $request): JsonResponse
     {
         $bomItem->delete();
 
-        if ($request->expectsJson()) {
-            return response()->json(null, 204);
-        }
-
-        return redirect()->route('bom-items.index')->with('success', 'BOM Item deleted successfully.');
+        return response()->json(null, 204);
     }
 
     /**
