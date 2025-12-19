@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -50,21 +53,17 @@ class UserController extends Controller
             abort(403, 'Unauthorized to create users.');
         }
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => ['required', Rule::in(['admin', 'operator', 'manager'])],
-            'permissions' => 'array',
-            'permissions.*' => 'string',
-        ]);
+        $validatedData = $this->validateUserData($request, false, null);
+
+        // If validation fails, the method would have already returned an error response
+        // So if we reach here, validation passed and $validatedData contains the validated data
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'permissions' => $request->permissions ?: [],
+            'name' => $validatedData['name'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+            'role' => $validatedData['role'],
+            'permissions' => $validatedData['permissions'] ?? [],
         ]);
 
         return response()->json([
@@ -72,6 +71,58 @@ class UserController extends Controller
             'message' => 'User created successfully.',
             'data' => $user,
         ], 201);
+    }
+
+    /**
+     * Validate user data.
+     */
+    protected function validateUserData(Request $request, bool $isUpdate = false, ?User $user = null)
+    {
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => ['required', Rule::in(['admin', 'operator', 'manager'])],
+            'permissions' => 'array',
+            'permissions.*' => 'string',
+        ];
+
+        if ($isUpdate) {
+            $rules['name'] = 'sometimes|string|max:255';
+            $rules['email'] = [
+                'sometimes',
+                'email',
+                Rule::unique('users')->ignore($user->id)
+            ];
+            $rules['password'] = 'sometimes|string|min:8|confirmed';
+            $rules['role'] = ['sometimes', Rule::in(['admin', 'operator', 'manager'])];
+            $rules['permissions'] = 'sometimes|array';
+        }
+
+        Log::info('Validating user data', [
+            'request_data' => $request->all(),
+            'validation_rules' => $rules,
+            'is_update' => $isUpdate,
+            'user_id' => $user?->id
+        ]);
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            Log::error('Validation failed', [
+                'errors' => $validator->errors()->toArray(),
+                'request_data' => $request->all()
+            ]);
+
+            // Throw a ValidationException which Laravel handles automatically
+            throw new \Illuminate\Validation\ValidationException($validator);
+        }
+
+        Log::info('Validation passed', [
+            'validated_data' => $validator->validated()
+        ]);
+
+        return $validator->validated();
     }
 
     /**
@@ -100,27 +151,28 @@ class UserController extends Controller
             abort(403, 'Unauthorized to edit users.');
         }
 
-        $request->validate([
-            'name' => 'sometimes|string|max:255',
-            'email' => [
-                'sometimes',
-                'email',
-                Rule::unique('users')->ignore($user->id)
-            ],
-            'password' => 'sometimes|string|min:8|confirmed',
-            'role' => ['sometimes', Rule::in(['admin', 'operator', 'manager'])],
-            'permissions' => 'sometimes|array',
-            'permissions.*' => 'string',
-        ]);
+        $validatedData = $this->validateUserData($request, true, $user);
 
-        $updateData = $request->only(['name', 'email', 'role']);
+        $updateData = [];
 
-        if ($request->filled('password')) {
-            $updateData['password'] = Hash::make($request->password);
+        if (isset($validatedData['name'])) {
+            $updateData['name'] = $validatedData['name'];
         }
 
-        if ($request->has('permissions')) {
-            $updateData['permissions'] = $request->permissions;
+        if (isset($validatedData['email'])) {
+            $updateData['email'] = $validatedData['email'];
+        }
+
+        if (isset($validatedData['role'])) {
+            $updateData['role'] = $validatedData['role'];
+        }
+
+        if (isset($validatedData['password'])) {
+            $updateData['password'] = Hash::make($validatedData['password']);
+        }
+
+        if (isset($validatedData['permissions'])) {
+            $updateData['permissions'] = $validatedData['permissions'];
         }
 
         $user->update($updateData);
