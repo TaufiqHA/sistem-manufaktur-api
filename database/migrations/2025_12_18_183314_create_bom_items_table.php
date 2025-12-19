@@ -26,7 +26,7 @@ return new class extends Migration
                 ->on('materials')
                 ->onDelete('restrict');
 
-            $table->integer('quantity_per_unit');
+            $table->decimal('quantity_per_unit');
             $table->integer('total_required');
 
             $table->integer('allocated');

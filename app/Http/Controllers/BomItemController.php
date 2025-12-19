@@ -29,7 +29,7 @@ class BomItemController extends Controller
         $validated = $request->validate([
             'item_id' => 'required|exists:project_items,id',
             'material_id' => 'required|exists:materials,id',
-            'quantity_per_unit' => 'required|integer|min:1',
+            'quantity_per_unit' => 'required|numeric|min:1',
             'total_required' => 'required|integer|min:1',
             'allocated' => 'required|integer|min:0',
             'realized' => 'required|integer|min:0',
@@ -59,7 +59,7 @@ class BomItemController extends Controller
         $validated = $request->validate([
             'item_id' => 'sometimes|required|exists:project_items,id',
             'material_id' => 'sometimes|required|exists:materials,id',
-            'quantity_per_unit' => 'sometimes|required|integer|min:1',
+            'quantity_per_unit' => 'sometimes|required|numeric|min:1',
             'total_required' => 'sometimes|required|integer|min:1',
             'allocated' => 'sometimes|required|integer|min:0',
             'realized' => 'sometimes|required|integer|min:0',
