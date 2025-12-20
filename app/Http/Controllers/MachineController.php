@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Machine;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class MachineController extends Controller
@@ -27,15 +28,25 @@ class MachineController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'code' => 'required|string|unique:machines,code|max:255',
             'name' => 'required|string|max:255',
-            'type' => ['required', 'string', Rule::in(['POTONG', 'PLONG', 'PRESS', 'LAS', 'WT', 'POWDER', 'QC'])],
+            'type' => ['required', 'string', Rule::in(['POTONG', 'PLONG', 'PRESS', 'LASPEN', 'LAS_MIG', 'PHOSPATHING', 'POWDER', 'PACKING'])],
             'capacity_per_hour' => 'required|integer|min:0',
             'status' => ['required', 'string', Rule::in(['IDLE', 'RUNNING', 'MAINTENANCE', 'OFFLINE', 'DOWNTIME'])],
             'personnel' => 'required|array',
             'is_maintenance' => 'boolean',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $validatedData = $validator->validated();
 
         $machine = Machine::create($validatedData);
 
@@ -62,7 +73,7 @@ class MachineController extends Controller
      */
     public function update(Request $request, Machine $machine): JsonResponse
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'code' => ['string', 'max:255', Rule::unique('machines', 'code')->ignore($machine->id)],
             'name' => 'string|max:255',
             'type' => ['string', Rule::in(['POTONG', 'PLONG', 'PRESS', 'LAS', 'WT', 'POWDER', 'QC'])],
@@ -71,6 +82,16 @@ class MachineController extends Controller
             'personnel' => 'array',
             'is_maintenance' => 'boolean',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $validatedData = $validator->validated();
 
         $machine->update($validatedData);
 

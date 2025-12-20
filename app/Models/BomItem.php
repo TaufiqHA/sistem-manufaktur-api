@@ -30,7 +30,6 @@ class BomItem extends Model
      * @var array
      */
     protected $casts = [
-        'total_required' => 'integer',
         'allocated' => 'integer',
         'realized' => 'integer',
     ];

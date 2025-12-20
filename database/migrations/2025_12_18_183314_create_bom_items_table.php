@@ -27,7 +27,7 @@ return new class extends Migration
                 ->onDelete('restrict');
 
             $table->decimal('quantity_per_unit');
-            $table->integer('total_required');
+            $table->decimal('total_required');
 
             $table->integer('allocated');
             $table->integer('realized');
