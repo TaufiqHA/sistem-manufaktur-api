@@ -18,7 +18,7 @@ class MachineSeeder extends Seeder
 
         // Create admin users for each machine type
         $adminPotong = User::firstOrCreate([
-            'email' => 'miskidi@example.com'
+            'email' => 'miskidi@gmail.com'
         ], [
             'name' => 'Miskidi',
             'password' => Hash::make('password'),
@@ -27,7 +27,7 @@ class MachineSeeder extends Seeder
         ]);
 
         $adminPlong = User::firstOrCreate([
-            'email' => 'fanti@example.com'
+            'email' => 'fanti@gmail.com'
         ], [
             'name' => 'Fanti',
             'password' => Hash::make('password'),
@@ -36,7 +36,7 @@ class MachineSeeder extends Seeder
         ]);
 
         $adminPress = User::firstOrCreate([
-            'email' => 'salim@example.com'
+            'email' => 'salim@gmail.com'
         ], [
             'name' => 'Salim',
             'password' => Hash::make('password'),
@@ -45,7 +45,7 @@ class MachineSeeder extends Seeder
         ]);
 
         $adminLaspen = User::firstOrCreate([
-            'email' => 'rudi@example.com'
+            'email' => 'rudi@gmail.com'
         ], [
             'name' => 'Rudi',
             'password' => Hash::make('password'),
@@ -54,7 +54,7 @@ class MachineSeeder extends Seeder
         ]);
 
         $adminLasMig = User::firstOrCreate([
-            'email' => 'rudi2@example.com'
+            'email' => 'rudi2@gmail.com'
         ], [
             'name' => 'Rudi',
             'password' => Hash::make('password'),
@@ -63,7 +63,7 @@ class MachineSeeder extends Seeder
         ]);
 
         $adminPhosphating = User::firstOrCreate([
-            'email' => 'dimas@example.com'
+            'email' => 'dimas@gmail.com'
         ], [
             'name' => 'Dimas',
             'password' => Hash::make('password'),
@@ -72,7 +72,7 @@ class MachineSeeder extends Seeder
         ]);
 
         $adminCat = User::firstOrCreate([
-            'email' => 'anam@example.com'
+            'email' => 'anam@gmail.com'
         ], [
             'name' => 'Anam',
             'password' => Hash::make('password'),
@@ -81,7 +81,7 @@ class MachineSeeder extends Seeder
         ]);
 
         $adminPacking = User::firstOrCreate([
-            'email' => 'tega@example.com'
+            'email' => 'tega@gmail.com'
         ], [
             'name' => 'Tega',
             'password' => Hash::make('password'),
@@ -97,7 +97,7 @@ class MachineSeeder extends Seeder
                 'type' => 'POTONG',
                 'capacity_per_hour' => 200,
                 'pic' => $adminPotong->id,
-                'status' => $i % 2 == 0 ? 'RUNNING' : 'IDLE',
+                'status' => 'IDLE',
                 'personnel' => [
                     [
                         'id' => $adminPotong->id,
@@ -133,7 +133,7 @@ class MachineSeeder extends Seeder
                 'type' => 'PLONG',
                 'capacity_per_hour' => 120,
                 'pic' => $adminPlong->id,
-                'status' => $i % 3 == 0 ? 'MAINTENANCE' : ($i % 2 == 0 ? 'RUNNING' : 'IDLE'),
+                'status' => 'IDLE',
                 'personnel' => [
                     [
                         'id' => $adminPlong->id,
@@ -169,7 +169,7 @@ class MachineSeeder extends Seeder
                 'type' => 'PRESS',
                 'capacity_per_hour' => 150,
                 'pic' => $adminPress->id,
-                'status' => $i % 2 == 0 ? 'RUNNING' : 'IDLE',
+                'status' => 'IDLE',
                 'personnel' => [
                     [
                         'id' => $adminPress->id,
@@ -205,7 +205,7 @@ class MachineSeeder extends Seeder
                 'type' => 'LASPEN',
                 'capacity_per_hour' => 100,
                 'pic' => $adminLaspen->id,
-                'status' => $i % 4 == 0 ? 'MAINTENANCE' : ($i % 2 == 0 ? 'RUNNING' : 'IDLE'),
+                'status' => 'IDLE',
                 'personnel' => [
                     [
                         'id' => $adminLaspen->id,
@@ -241,7 +241,7 @@ class MachineSeeder extends Seeder
                 'type' => 'LASMIG',
                 'capacity_per_hour' => 90,
                 'pic' => $adminLasMig->id,
-                'status' => $i % 4 == 0 ? 'MAINTENANCE' : ($i % 2 == 0 ? 'RUNNING' : 'IDLE'),
+                'status' => 'IDLE',
                 'personnel' => [
                     [
                         'id' => $adminLasMig->id,
@@ -277,7 +277,7 @@ class MachineSeeder extends Seeder
                 'type' => 'PHOSPHATING',
                 'capacity_per_hour' => 80,
                 'pic' => $adminPhosphating->id,
-                'status' => $i % 2 == 0 ? 'RUNNING' : 'IDLE',
+                'status' => 'IDLE',
                 'personnel' => [
                     [
                         'id' => $adminPhosphating->id,
@@ -313,7 +313,7 @@ class MachineSeeder extends Seeder
                 'type' => 'CAT',
                 'capacity_per_hour' => 70,
                 'pic' => $adminCat->id,
-                'status' => $i % 2 == 0 ? 'RUNNING' : 'IDLE',
+                'status' => 'IDLE',
                 'personnel' => [
                     [
                         'id' => $adminCat->id,
@@ -349,7 +349,7 @@ class MachineSeeder extends Seeder
                 'type' => 'PACKING',
                 'capacity_per_hour' => 100,
                 'pic' => $adminPacking->id,
-                'status' => 'RUNNING',
+                'status' => 'IDLE',
                 'personnel' => [
                     [
                         'id' => $adminPacking->id,
