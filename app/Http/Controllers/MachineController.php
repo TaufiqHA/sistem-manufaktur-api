@@ -33,6 +33,7 @@ class MachineController extends Controller
             'name' => 'required|string|max:255',
             'type' => ['required', 'string', Rule::in(['POTONG', 'PLONG', 'PRESS', 'LASPEN', 'LAS_MIG', 'PHOSPATHING', 'POWDER', 'PACKING'])],
             'capacity_per_hour' => 'required|integer|min:0',
+            'pic' => 'required|integer|exists:users,id',
             'status' => ['required', 'string', Rule::in(['IDLE', 'RUNNING', 'MAINTENANCE', 'OFFLINE', 'DOWNTIME'])],
             'personnel' => 'required|array',
             'is_maintenance' => 'boolean',
@@ -76,8 +77,9 @@ class MachineController extends Controller
         $validator = Validator::make($request->all(), [
             'code' => ['string', 'max:255', Rule::unique('machines', 'code')->ignore($machine->id)],
             'name' => 'string|max:255',
-            'type' => ['string', Rule::in(['POTONG', 'PLONG', 'PRESS', 'LAS', 'WT', 'POWDER', 'QC'])],
+            'type' => ['string', Rule::in(['POTONG', 'PLONG', 'PRESS', 'LASPEN', 'LAS_MIG', 'PHOSPATHING', 'POWDER', 'PACKING'])],
             'capacity_per_hour' => 'integer|min:0',
+            'pic' => 'integer|exists:users,id',
             'status' => ['string', Rule::in(['IDLE', 'RUNNING', 'MAINTENANCE', 'OFFLINE', 'DOWNTIME'])],
             'personnel' => 'array',
             'is_maintenance' => 'boolean',
@@ -137,7 +139,7 @@ class MachineController extends Controller
      */
     public function getByType(string $type): JsonResponse
     {
-        $validTypes = ['POTONG', 'PLONG', 'PRESS', 'LAS', 'WT', 'POWDER', 'QC'];
+        $validTypes = ['POTONG', 'PLONG', 'PRESS', 'LASPEN', 'LAS_MIG', 'PHOSPATHING', 'POWDER', 'PACKING'];
 
         if (!in_array(strtoupper($type), $validTypes)) {
             return response()->json([

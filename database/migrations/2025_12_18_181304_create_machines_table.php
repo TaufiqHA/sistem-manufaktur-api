@@ -21,6 +21,7 @@ return new class extends Migration
             // POTONG | PLONG | PRESS | LAS | WT | POWDER | QC
 
             $table->integer('capacity_per_hour');
+            $table->string('pic');
 
             $table->string('status'); 
             // IDLE | RUNNING | MAINTENANCE | OFFLINE | DOWNTIME

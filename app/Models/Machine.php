@@ -20,6 +20,7 @@ class Machine extends Model
         'name',
         'type',
         'capacity_per_hour',
+        'pic',
         'status',
         'personnel',
         'is_maintenance',
@@ -34,5 +35,6 @@ class Machine extends Model
         'personnel' => 'array',
         'is_maintenance' => 'boolean',
         'capacity_per_hour' => 'integer',
+        'pic' => 'integer',
     ];
 }
