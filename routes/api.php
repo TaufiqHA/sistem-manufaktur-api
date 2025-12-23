@@ -3,11 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\MaterialController;
-use App\Http\Controllers\MachineController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\MachineController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\RfqItemController;
+use App\Http\Controllers\MaterialController;
 
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -69,6 +70,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // RFQ resource routes with sanctum middleware
     Route::apiResource('rfqs', \App\Http\Controllers\RfqController::class);
+
+    // RFQ Item resource routes with sanctum middleware
+    Route::apiResource('rfq-items', RfqItemController::class);
+    Route::get('/rfq-items-by-rfq/{rfqId}', [RfqItemController::class, 'getByRfq']);
 
     // Production Log resource routes with sanctum middleware
     Route::apiResource('production-logs', \App\Http\Controllers\ProductionLogController::class);
