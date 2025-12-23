@@ -31,7 +31,7 @@ class MachineController extends Controller
         $validator = Validator::make($request->all(), [
             'code' => 'required|string|unique:machines,code|max:255',
             'name' => 'required|string|max:255',
-            'type' => ['required', 'string', Rule::in(['POTONG', 'PLONG', 'PRESS', 'LASPEN', 'LAS_MIG', 'PHOSPATHING', 'POWDER', 'PACKING'])],
+            'type' => ['required', 'string', Rule::in(['POTONG', 'PLONG', 'PRESS', 'LASPEN', 'LASMIG', 'PHOSPATHING', 'CAT', 'PACKING'])],
             'capacity_per_hour' => 'required|integer|min:0',
             'pic' => 'required|integer|exists:users,id',
             'status' => ['required', 'string', Rule::in(['IDLE', 'RUNNING', 'MAINTENANCE', 'OFFLINE', 'DOWNTIME'])],
@@ -77,7 +77,7 @@ class MachineController extends Controller
         $validator = Validator::make($request->all(), [
             'code' => ['string', 'max:255', Rule::unique('machines', 'code')->ignore($machine->id)],
             'name' => 'string|max:255',
-            'type' => ['string', Rule::in(['POTONG', 'PLONG', 'PRESS', 'LASPEN', 'LAS_MIG', 'PHOSPATHING', 'POWDER', 'PACKING'])],
+            'type' => ['string', Rule::in(['POTONG', 'PLONG', 'PRESS', 'LASPEN', 'LASMIG', 'PHOSPATHING', 'CAT', 'PACKING'])],
             'capacity_per_hour' => 'integer|min:0',
             'pic' => 'integer|exists:users,id',
             'status' => ['string', Rule::in(['IDLE', 'RUNNING', 'MAINTENANCE', 'OFFLINE', 'DOWNTIME'])],

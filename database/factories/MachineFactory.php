@@ -16,7 +16,7 @@ class MachineFactory extends Factory
      */
     public function definition(): array
     {
-        $machineTypes = ['POTONG', 'PLONG', 'PRESS', 'LAS', 'WT', 'POWDER', 'QC'];
+        $machineTypes = ['POTONG', 'PLONG', 'PRESS', 'LASPEN', 'LASMIG', 'PHOSPATHING', 'CAT', 'PACKING'];
         $statuses = ['IDLE', 'RUNNING', 'MAINTENANCE', 'OFFLINE', 'DOWNTIME'];
 
         return [
