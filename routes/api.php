@@ -67,6 +67,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/tasks/{task}/end-downtime', [TaskController::class, 'endDowntime']);
     Route::get('/tasks-statistics', [TaskController::class, 'statistics']);
 
+    // RFQ resource routes with sanctum middleware
+    Route::apiResource('rfqs', \App\Http\Controllers\RfqController::class);
+
     // Production Log resource routes with sanctum middleware
     Route::apiResource('production-logs', \App\Http\Controllers\ProductionLogController::class);
 
