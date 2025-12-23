@@ -78,6 +78,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Supplier resource routes with sanctum middleware
     Route::apiResource('suppliers', \App\Http\Controllers\SupplierController::class);
 
+    // Purchase Order resource routes with sanctum middleware
+    Route::apiResource('purchase-orders', \App\Http\Controllers\PurchaseOrderController::class);
+
+    // PO Item resource routes with sanctum middleware
+    Route::apiResource('po-items', \App\Http\Controllers\PoItemController::class);
+
     // Production Log resource routes with sanctum middleware
     Route::apiResource('production-logs', \App\Http\Controllers\ProductionLogController::class);
 
