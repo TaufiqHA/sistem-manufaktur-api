@@ -75,6 +75,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('rfq-items', RfqItemController::class);
     Route::get('/rfq-items-by-rfq/{rfqId}', [RfqItemController::class, 'getByRfq']);
 
+    // Supplier resource routes with sanctum middleware
+    Route::apiResource('suppliers', \App\Http\Controllers\SupplierController::class);
+
     // Production Log resource routes with sanctum middleware
     Route::apiResource('production-logs', \App\Http\Controllers\ProductionLogController::class);
 
