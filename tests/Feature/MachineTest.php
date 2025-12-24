@@ -34,6 +34,7 @@ class MachineTest extends TestCase
                 'name' => 'Testing Machine',
                 'type' => 'PRESS',
                 'capacity_per_hour' => 100,
+                'pic' => $this->user->id,
                 'status' => 'IDLE',
                 'personnel' => [['id' => '1', 'name' => 'John Doe', 'position' => 'Operator']],
             ]);
@@ -49,6 +50,7 @@ class MachineTest extends TestCase
             'name' => 'Testing Machine',
             'type' => 'PRESS',
             'capacity_per_hour' => 100,
+            'pic' => $this->user->id,
             'status' => 'IDLE',
         ]);
     }

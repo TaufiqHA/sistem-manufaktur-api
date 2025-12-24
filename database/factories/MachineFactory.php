@@ -24,6 +24,9 @@ class MachineFactory extends Factory
             'name' => $this->faker->company() . ' ' . $this->faker->word(),
             'type' => $this->faker->randomElement($machineTypes),
             'capacity_per_hour' => $this->faker->numberBetween(10, 500),
+            'pic' => function () {
+                return \App\Models\User::factory()->create()->id;
+            },
             'status' => $this->faker->randomElement($statuses),
             'personnel' => json_encode([
                 [
