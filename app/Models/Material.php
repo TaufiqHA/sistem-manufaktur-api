@@ -33,4 +33,12 @@ class Material extends Model
     {
         return $this->current_stock < $this->safety_stock;
     }
+
+    /**
+     * Get all receiving items for this material.
+     */
+    public function receivingItems()
+    {
+        return $this->hasMany(ReceivingItem::class, 'material_id');
+    }
 }

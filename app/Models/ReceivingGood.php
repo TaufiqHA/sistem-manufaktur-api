@@ -47,4 +47,12 @@ class ReceivingGood extends Model
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
+
+    /**
+     * Get all items for this receiving.
+     */
+    public function items()
+    {
+        return $this->hasMany(ReceivingItem::class, 'receiving_id');
+    }
 }

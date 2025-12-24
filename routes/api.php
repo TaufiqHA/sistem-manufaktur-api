@@ -88,6 +88,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Receiving Good resource routes with sanctum middleware
     Route::apiResource('receiving-goods', \App\Http\Controllers\ReceivingGoodController::class);
 
+    // Receiving Item resource routes with sanctum middleware
+    Route::apiResource('receiving-items', \App\Http\Controllers\ReceivingItemController::class);
+    Route::get('/receiving-goods/{receiving}/items', [\App\Http\Controllers\ReceivingItemController::class, 'getByReceiving']);
+
     // Production Log resource routes with sanctum middleware
     Route::apiResource('production-logs', \App\Http\Controllers\ProductionLogController::class);
 
