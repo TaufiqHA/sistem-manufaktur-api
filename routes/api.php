@@ -9,6 +9,7 @@ use App\Http\Controllers\MachineController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RfqItemController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\ReceivingGoodController;
 
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -83,6 +84,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // PO Item resource routes with sanctum middleware
     Route::apiResource('po-items', \App\Http\Controllers\PoItemController::class);
+
+    // Receiving Good resource routes with sanctum middleware
+    Route::apiResource('receiving-goods', \App\Http\Controllers\ReceivingGoodController::class);
 
     // Production Log resource routes with sanctum middleware
     Route::apiResource('production-logs', \App\Http\Controllers\ProductionLogController::class);
