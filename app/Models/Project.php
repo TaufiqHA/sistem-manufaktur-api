@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
@@ -46,4 +47,12 @@ class Project extends Model
         'is_locked' => 'boolean',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * Get the finished goods warehouses for the project.
+     */
+    public function finishedGoodsWarehouses(): HasMany
+    {
+        return $this->hasMany(FinishedGoodsWarehouse::class);
+    }
 }
