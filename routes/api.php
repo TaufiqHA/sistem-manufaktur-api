@@ -10,6 +10,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\RfqItemController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ReceivingGoodController;
+use App\Http\Controllers\DeliveryOrderController;
 
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -91,6 +92,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Receiving Item resource routes with sanctum middleware
     Route::apiResource('receiving-items', \App\Http\Controllers\ReceivingItemController::class);
     Route::get('/receiving-goods/{receiving}/items', [\App\Http\Controllers\ReceivingItemController::class, 'getByReceiving']);
+
+    // Delivery Order resource routes with sanctum middleware
+    Route::apiResource('delivery-orders', \App\Http\Controllers\DeliveryOrderController::class);
 
     // Finished Goods Warehouse resource routes with sanctum middleware
     Route::apiResource('finished-goods-warehouses', \App\Http\Controllers\FinishedGoodsWarehouseController::class);
