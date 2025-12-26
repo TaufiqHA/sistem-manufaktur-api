@@ -17,6 +17,8 @@ class ProjectItem extends Model
         'dimensions',
         'thickness',
         'qty_set',
+        'qty_per_product',
+        'total_required_qty',
         'quantity',
         'unit',
         'is_bom_locked',

@@ -26,6 +26,8 @@ class ProjectItemFactory extends Factory
             'dimensions' => fake()->word() . 'x' . fake()->word() . 'x' . fake()->word(),
             'thickness' => fake()->randomElement(['3mm', '6mm', '9mm', '12mm', '15mm', '18mm', '21mm', '24mm']),
             'qty_set' => fake()->numberBetween(1, 100),
+            'qty_per_product' => fake()->numberBetween(1, 10),
+            'total_required_qty' => fake()->numberBetween(1, 1000),
             'quantity' => fake()->numberBetween(1, 1000),
             'unit' => fake()->randomElement(['pcs', 'set', 'unit', 'box', 'pack', 'sheet']),
             'is_bom_locked' => fake()->boolean,

@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('thickness');
 
             $table->integer('qty_set');
+            $table->integer('qty_per_product');
+            $table->integer('total_required_qty')->default(0);
             $table->integer('quantity');
 
             $table->string('unit');
