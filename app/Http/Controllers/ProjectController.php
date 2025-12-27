@@ -6,6 +6,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
@@ -27,7 +28,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'code' => 'required|string|max:255|unique:projects,code',
             'name' => 'required|string|max:255',
             'customer' => 'required|string|max:255',
@@ -41,6 +42,15 @@ class ProjectController extends Controller
             'unit' => 'required|string|max:50',
             'is_locked' => 'boolean',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $validatedData = $validator->validated();
 
         // Additional validation for date relationship
         if (strtotime($validatedData['start_date']) > strtotime($validatedData['deadline'])) {
@@ -79,7 +89,7 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project): JsonResponse
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'code' => 'required|string|max:255|unique:projects,code,' . $project->id,
             'name' => 'required|string|max:255',
             'customer' => 'required|string|max:255',
@@ -93,6 +103,15 @@ class ProjectController extends Controller
             'unit' => 'required|string|max:50',
             'is_locked' => 'boolean',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $validatedData = $validator->validated();
 
         // Additional validation for date relationship
         if (strtotime($validatedData['start_date']) > strtotime($validatedData['deadline'])) {
