@@ -7,6 +7,7 @@ use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class FinishedGoodsWarehouseController extends Controller
@@ -36,14 +37,21 @@ class FinishedGoodsWarehouseController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'project_id' => 'required|exists:projects,id',
             'item_name' => 'required|string|max:255',
             'total_produced' => 'required|integer|min:0',
             'shipped_qty' => 'required|integer|min:0',
             'available_stock' => 'required|integer|min:0',
             'unit' => 'required|string|max:50',
+            'status' => 'nullable|in:not validate,validated',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $validated = $validator->validated();
 
         // Ensure available_stock doesn't exceed total_produced
         if ($validated['available_stock'] > $validated['total_produced']) {
@@ -80,14 +88,21 @@ class FinishedGoodsWarehouseController extends Controller
      */
     public function update(Request $request, FinishedGoodsWarehouse $finishedGoodsWarehouse): JsonResponse
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(), [
             'project_id' => 'required|exists:projects,id',
             'item_name' => 'required|string|max:255',
             'total_produced' => 'required|integer|min:0',
             'shipped_qty' => 'required|integer|min:0',
             'available_stock' => 'required|integer|min:0',
             'unit' => 'required|string|max:50',
+            'status' => 'nullable|in:not validate,validated',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $validated = $validator->validated();
 
         // Ensure available_stock doesn't exceed total_produced
         if ($validated['available_stock'] > $validated['total_produced']) {

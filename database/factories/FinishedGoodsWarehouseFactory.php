@@ -39,6 +39,7 @@ class FinishedGoodsWarehouseFactory extends Factory
             'shipped_qty' => $shippedQty,
             'available_stock' => $availableStock,
             'unit' => $this->faker->randomElement(['pcs', 'kg', 'meter', 'liter', 'unit']),
+            'status' => $this->faker->randomElement(['not validate', 'validated']),
         ];
     }
 }

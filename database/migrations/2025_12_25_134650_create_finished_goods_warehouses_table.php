@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('shipped_qty')->default(0);
             $table->unsignedInteger('available_stock');
             $table->string('unit');
+            $table->enum('status', ['not validate', 'validated'])->default('not validate');
             $table->timestamps(); // created_at & updated_at
         });
     }

@@ -22,6 +22,7 @@ class FinishedGoodsWarehouse extends Model
         'shipped_qty',
         'available_stock',
         'unit',
+        'status',
     ];
 
     /**
@@ -33,6 +34,7 @@ class FinishedGoodsWarehouse extends Model
         'total_produced' => 'integer',
         'shipped_qty' => 'integer',
         'available_stock' => 'integer',
+        'status' => 'string',
     ];
 
     /**

@@ -38,6 +38,7 @@ class FinishedGoodsWarehouseTest extends TestCase
                 'shipped_qty' => $finishedGoodsWarehouse->shipped_qty,
                 'available_stock' => $finishedGoodsWarehouse->available_stock,
                 'unit' => $finishedGoodsWarehouse->unit,
+                'status' => $finishedGoodsWarehouse->status,
             ]);
     }
 
@@ -55,6 +56,7 @@ class FinishedGoodsWarehouseTest extends TestCase
             'shipped_qty' => 20,
             'available_stock' => 80,
             'unit' => 'pcs',
+            'status' => 'not validate',
         ];
 
         $response = $this->actingAs($user, 'sanctum')
@@ -68,6 +70,7 @@ class FinishedGoodsWarehouseTest extends TestCase
             'shipped_qty' => $data['shipped_qty'],
             'available_stock' => $data['available_stock'],
             'unit' => $data['unit'],
+            'status' => $data['status'],
         ]);
     }
 
@@ -112,6 +115,7 @@ class FinishedGoodsWarehouseTest extends TestCase
                 'shipped_qty' => $finishedGoodsWarehouse->shipped_qty,
                 'available_stock' => $finishedGoodsWarehouse->available_stock,
                 'unit' => $finishedGoodsWarehouse->unit,
+                'status' => $finishedGoodsWarehouse->status,
             ]);
     }
 
@@ -129,6 +133,7 @@ class FinishedGoodsWarehouseTest extends TestCase
             'shipped_qty' => 30,
             'available_stock' => 120,
             'unit' => 'units',
+            'status' => 'validated',
         ];
 
         $response = $this->actingAs($user, 'sanctum')
@@ -142,6 +147,7 @@ class FinishedGoodsWarehouseTest extends TestCase
             'shipped_qty' => $updatedData['shipped_qty'],
             'available_stock' => $updatedData['available_stock'],
             'unit' => $updatedData['unit'],
+            'status' => $updatedData['status'],
         ]);
     }
 
@@ -173,6 +179,7 @@ class FinishedGoodsWarehouseTest extends TestCase
             'shipped_qty' => -1, // Negative value
             'available_stock' => -1, // Negative value
             'unit' => '', // Empty unit
+            'status' => 'invalid_status', // Invalid status
         ];
 
         $response = $this->actingAs($user, 'sanctum')
@@ -195,6 +202,7 @@ class FinishedGoodsWarehouseTest extends TestCase
             'shipped_qty' => -1, // Negative value
             'available_stock' => -1, // Negative value
             'unit' => '', // Empty unit
+            'status' => 'invalid_status', // Invalid status
         ];
 
         $response = $this->actingAs($user, 'sanctum')
@@ -217,6 +225,7 @@ class FinishedGoodsWarehouseTest extends TestCase
             'shipped_qty' => 20,
             'available_stock' => 150, // This exceeds total_produced (100)
             'unit' => 'pcs',
+            'status' => 'not validate',
         ];
 
         $response = $this->actingAs($user, 'sanctum')
