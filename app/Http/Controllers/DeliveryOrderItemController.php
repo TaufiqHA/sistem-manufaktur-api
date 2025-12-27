@@ -15,6 +15,22 @@ use Illuminate\Http\Response;
 class DeliveryOrderItemController extends Controller
 {
     /**
+     * Get the validation rules for delivery order items.
+     */
+    protected function getValidationRules(): array
+    {
+        return [
+            'delivery_order_id' => 'required|exists:delivery_orders,id',
+            'warehouse_id' => 'required|exists:finished_goods_warehouses,id',
+            'project_id' => 'required|exists:projects,id',
+            'project_name' => 'required|string|max:255',
+            'item_name' => 'required|string|max:255',
+            'qty' => 'required|integer|min:1',
+            'unit' => 'required|string|max:50',
+        ];
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(): JsonResponse
@@ -41,17 +57,9 @@ class DeliveryOrderItemController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $request->validate([
-            'delivery_order_id' => 'required|exists:delivery_orders,id',
-            'warehouse_id' => 'required|exists:finished_goods_warehouses,id',
-            'project_id' => 'required|exists:projects,id',
-            'project_name' => 'required|string|max:255',
-            'item_name' => 'required|string|max:255',
-            'qty' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50',
-        ]);
+        $validatedData = $request->validate($this->getValidationRules());
 
-        $deliveryOrderItem = DeliveryOrderItem::create($request->all());
+        $deliveryOrderItem = DeliveryOrderItem::create($validatedData);
 
         return response()->json($deliveryOrderItem, 201);
     }
@@ -83,17 +91,9 @@ class DeliveryOrderItemController extends Controller
      */
     public function update(Request $request, DeliveryOrderItem $deliveryOrderItem): JsonResponse
     {
-        $request->validate([
-            'delivery_order_id' => 'required|exists:delivery_orders,id',
-            'warehouse_id' => 'required|exists:finished_goods_warehouses,id',
-            'project_id' => 'required|exists:projects,id',
-            'project_name' => 'required|string|max:255',
-            'item_name' => 'required|string|max:255',
-            'qty' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50',
-        ]);
+        $validatedData = $request->validate($this->getValidationRules());
 
-        $deliveryOrderItem->update($request->all());
+        $deliveryOrderItem->update($validatedData);
 
         return response()->json($deliveryOrderItem, 200);
     }

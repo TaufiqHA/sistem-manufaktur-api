@@ -10,6 +10,40 @@ use Illuminate\Http\Response;
 class DeliveryOrderController extends Controller
 {
     /**
+     * Get the validation rules for delivery orders on creation.
+     */
+    protected function getCreateValidationRules(): array
+    {
+        return [
+            'code' => 'required|string|unique:delivery_orders,code',
+            'date' => 'required|date',
+            'customer' => 'required|string',
+            'address' => 'required|string',
+            'driver_name' => 'required|string',
+            'vehicle_plate' => 'required|string',
+            'status' => 'sometimes|string|in:draft,validated,send,archived',
+            'note' => 'sometimes|nullable|string',
+        ];
+    }
+
+    /**
+     * Get the validation rules for delivery orders on update.
+     */
+    protected function getUpdateValidationRules(DeliveryOrder $deliveryOrder): array
+    {
+        return [
+            'code' => 'sometimes|required|string|unique:delivery_orders,code,' . $deliveryOrder->id,
+            'date' => 'sometimes|required|date',
+            'customer' => 'sometimes|required|string',
+            'address' => 'sometimes|required|string',
+            'driver_name' => 'sometimes|required|string',
+            'vehicle_plate' => 'sometimes|required|string',
+            'status' => 'sometimes|string|in:draft,validated,send,archived',
+            'note' => 'sometimes|nullable|string',
+        ];
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(): JsonResponse
@@ -23,14 +57,13 @@ class DeliveryOrderController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validatedData = $request->validate([
-            'code' => 'required|string|unique:delivery_orders,code',
-            'date' => 'required|date',
-            'customer' => 'required|string',
-            'address' => 'required|string',
-            'driver_name' => 'required|string',
-            'vehicle_plate' => 'required|string',
-        ]);
+        $validator = \Validator::make($request->all(), $this->getCreateValidationRules());
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $validatedData = $validator->validated();
 
         $deliveryOrder = DeliveryOrder::create($validatedData);
 
@@ -50,14 +83,13 @@ class DeliveryOrderController extends Controller
      */
     public function update(Request $request, DeliveryOrder $deliveryOrder): JsonResponse
     {
-        $validatedData = $request->validate([
-            'code' => 'sometimes|required|string|unique:delivery_orders,code,' . $deliveryOrder->id,
-            'date' => 'sometimes|required|date',
-            'customer' => 'sometimes|required|string',
-            'address' => 'sometimes|required|string',
-            'driver_name' => 'sometimes|required|string',
-            'vehicle_plate' => 'sometimes|required|string',
-        ]);
+        $validator = \Validator::make($request->all(), $this->getUpdateValidationRules($deliveryOrder));
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $validatedData = $validator->validated();
 
         $deliveryOrder->update($validatedData);
 

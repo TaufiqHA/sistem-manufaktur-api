@@ -22,6 +22,8 @@ class DeliveryOrder extends Model
         'address',
         'driver_name',
         'vehicle_plate',
+        'status',
+        'note',
     ];
 
     /**
@@ -31,5 +33,7 @@ class DeliveryOrder extends Model
      */
     protected $casts = [
         'date' => 'datetime',
+        'status' => 'string',
+        'note' => 'string',
     ];
 }

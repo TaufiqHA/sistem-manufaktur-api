@@ -2,32 +2,32 @@
 
 ## Base URL
 ```
-http://your-api-domain.com/api
+https://your-api-domain.com/api
 ```
 
 ## Authentication
-All endpoints require authentication using Sanctum tokens. Include the token in the Authorization header:
+All API endpoints require authentication using Sanctum tokens. Include the token in the `Authorization` header:
+
 ```
 Authorization: Bearer {your-token}
 ```
 
-## Endpoints
+## Available Endpoints
 
-### 1. Get All Delivery Orders
-**GET** `/delivery-orders`
+### 1. List Delivery Orders
+**GET** `/api/delivery-orders`
 
 #### Description
 Retrieve a list of all delivery orders.
 
 #### Headers
 ```
-Authorization: Bearer {your-token}
-Content-Type: application/json
+Authorization: Bearer {token}
+Accept: application/json
 ```
 
 #### Response
-- **Status Code**: 200 OK
-- **Response Body**:
+- **200 OK**: Successfully retrieved the list of delivery orders
 ```json
 [
   {
@@ -44,26 +44,25 @@ Content-Type: application/json
 ]
 ```
 
----
-
 ### 2. Get Single Delivery Order
-**GET** `/delivery-orders/{id}`
+**GET** `/api/delivery-orders/{id}`
 
 #### Description
-Retrieve a specific delivery order by ID.
+Retrieve a specific delivery order by its ID.
 
 #### Path Parameters
-- `id` (integer): The ID of the delivery order to retrieve
+- `id`: The ID of the delivery order to retrieve
 
 #### Headers
 ```
-Authorization: Bearer {your-token}
-Content-Type: application/json
+Authorization: Bearer {token}
+Accept: application/json
 ```
 
 #### Response
-- **Status Code**: 200 OK
-- **Response Body**:
+- **200 OK**: Successfully retrieved the delivery order
+- **404 Not Found**: Delivery order not found
+
 ```json
 {
   "id": 1,
@@ -78,21 +77,16 @@ Content-Type: application/json
 }
 ```
 
-#### Errors
-- **Status Code**: 401 Unauthorized - If authentication fails
-- **Status Code**: 404 Not Found - If the delivery order doesn't exist
-
----
-
 ### 3. Create Delivery Order
-**POST** `/delivery-orders`
+**POST** `/api/delivery-orders`
 
 #### Description
 Create a new delivery order.
 
 #### Headers
 ```
-Authorization: Bearer {your-token}
+Authorization: Bearer {token}
+Accept: application/json
 Content-Type: application/json
 ```
 
@@ -108,17 +102,18 @@ Content-Type: application/json
 }
 ```
 
-#### Request Body Parameters
-- `code` (string, required): Unique code for the delivery order
-- `date` (string, required): Date and time of the delivery (ISO format or datetime string)
-- `customer` (string, required): Name of the customer
-- `address` (string, required): Delivery address
-- `driver_name` (string, required): Name of the delivery driver
-- `vehicle_plate` (string, required): Vehicle license plate number
+#### Fields
+- `code` (required): Unique code for the delivery order (string, unique in delivery_orders table)
+- `date` (required): Date and time of the delivery (date format)
+- `customer` (required): Name of the customer (string)
+- `address` (required): Delivery address (string)
+- `driver_name` (required): Name of the delivery driver (string)
+- `vehicle_plate` (required): Vehicle license plate number (string)
 
 #### Response
-- **Status Code**: 201 Created
-- **Response Body**:
+- **201 Created**: Successfully created the delivery order
+- **422 Unprocessable Entity**: Validation errors occurred
+
 ```json
 {
   "id": 2,
@@ -133,26 +128,19 @@ Content-Type: application/json
 }
 ```
 
-#### Errors
-- **Status Code**: 401 Unauthorized - If authentication fails
-- **Status Code**: 422 Unprocessable Entity - If validation fails
-  - `code` must be unique
-  - All required fields must be provided
-
----
-
 ### 4. Update Delivery Order
-**PUT** `/delivery-orders/{id}`
+**PUT** `/api/delivery-orders/{id}`
 
 #### Description
 Update an existing delivery order with all fields.
 
 #### Path Parameters
-- `id` (integer): The ID of the delivery order to update
+- `id`: The ID of the delivery order to update
 
 #### Headers
 ```
-Authorization: Bearer {your-token}
+Authorization: Bearer {token}
+Accept: application/json
 Content-Type: application/json
 ```
 
@@ -168,17 +156,19 @@ Content-Type: application/json
 }
 ```
 
-#### Request Body Parameters
-- `code` (string): Unique code for the delivery order
-- `date` (string): Date and time of the delivery (ISO format or datetime string)
-- `customer` (string): Name of the customer
-- `address` (string): Delivery address
-- `driver_name` (string): Name of the delivery driver
-- `vehicle_plate` (string): Vehicle license plate number
+#### Fields
+- `code` (conditionally required): Unique code for the delivery order; only validated if provided (string, must be unique in delivery_orders table, excluding current record)
+- `date` (conditionally required): Date and time of the delivery; only validated if provided (date format)
+- `customer` (conditionally required): Name of the customer; only validated if provided (string)
+- `address` (conditionally required): Delivery address; only validated if provided (string)
+- `driver_name` (conditionally required): Name of the delivery driver; only validated if provided (string)
+- `vehicle_plate` (conditionally required): Vehicle license plate number; only validated if provided (string)
 
 #### Response
-- **Status Code**: 200 OK
-- **Response Body**:
+- **200 OK**: Successfully updated the delivery order
+- **404 Not Found**: Delivery order not found
+- **422 Unprocessable Entity**: Validation errors occurred
+
 ```json
 {
   "id": 1,
@@ -193,25 +183,19 @@ Content-Type: application/json
 }
 ```
 
-#### Errors
-- **Status Code**: 401 Unauthorized - If authentication fails
-- **Status Code**: 404 Not Found - If the delivery order doesn't exist
-- **Status Code**: 422 Unprocessable Entity - If validation fails
-
----
-
 ### 5. Partially Update Delivery Order
-**PATCH** `/delivery-orders/{id}`
+**PATCH** `/api/delivery-orders/{id}`
 
 #### Description
 Partially update an existing delivery order.
 
 #### Path Parameters
-- `id` (integer): The ID of the delivery order to update
+- `id`: The ID of the delivery order to update
 
 #### Headers
 ```
-Authorization: Bearer {your-token}
+Authorization: Bearer {token}
+Accept: application/json
 Content-Type: application/json
 ```
 
@@ -222,17 +206,19 @@ Content-Type: application/json
 }
 ```
 
-#### Request Body Parameters
-- `code` (string, optional): Unique code for the delivery order
-- `date` (string, optional): Date and time of the delivery (ISO format or datetime string)
-- `customer` (string, optional): Name of the customer
-- `address` (string, optional): Delivery address
-- `driver_name` (string, optional): Name of the delivery driver
-- `vehicle_plate` (string, optional): Vehicle license plate number
+#### Fields
+- `code` (conditionally required): Unique code for the delivery order; only validated if provided (string, must be unique in delivery_orders table, excluding current record)
+- `date` (conditionally required): Date and time of the delivery; only validated if provided (date format)
+- `customer` (conditionally required): Name of the customer; only validated if provided (string)
+- `address` (conditionally required): Delivery address; only validated if provided (string)
+- `driver_name` (conditionally required): Name of the delivery driver; only validated if provided (string)
+- `vehicle_plate` (conditionally required): Vehicle license plate number; only validated if provided (string)
 
 #### Response
-- **Status Code**: 200 OK
-- **Response Body**:
+- **200 OK**: Successfully updated the delivery order
+- **404 Not Found**: Delivery order not found
+- **422 Unprocessable Entity**: Validation errors occurred
+
 ```json
 {
   "id": 1,
@@ -247,55 +233,66 @@ Content-Type: application/json
 }
 ```
 
-#### Errors
-- **Status Code**: 401 Unauthorized - If authentication fails
-- **Status Code**: 404 Not Found - If the delivery order doesn't exist
-- **Status Code**: 422 Unprocessable Entity - If validation fails
-
----
-
 ### 6. Delete Delivery Order
-**DELETE** `/delivery-orders/{id}`
+**DELETE** `/api/delivery-orders/{id}`
 
 #### Description
-Delete a specific delivery order by ID.
+Delete a specific delivery order.
 
 #### Path Parameters
-- `id` (integer): The ID of the delivery order to delete
+- `id`: The ID of the delivery order to delete
 
 #### Headers
 ```
-Authorization: Bearer {your-token}
-Content-Type: application/json
+Authorization: Bearer {token}
+Accept: application/json
 ```
 
 #### Response
-- **Status Code**: 204 No Content
-- **Response Body**: Empty
+- **204 No Content**: Successfully deleted the delivery order
+- **404 Not Found**: Delivery order not found
 
-#### Errors
-- **Status Code**: 401 Unauthorized - If authentication fails
-- **Status Code**: 404 Not Found - If the delivery order doesn't exist
+## Error Responses
 
----
-
-## Error Response Format
-
-When an error occurs, the API returns a JSON response in the following format:
-
+### 422 Validation Error
 ```json
 {
-  "message": "Error message",
-  "errors": {
-    "field_name": [
-      "Validation error message"
-    ]
-  }
+    "message": "The given data was invalid.",
+    "errors": {
+        "code": [
+            "The code field is required.",
+            "The code has already been taken."
+        ],
+        "date": [
+            "The date field is required.",
+            "The date is not a valid date."
+        ],
+        "customer": [
+            "The customer field is required."
+        ],
+        "address": [
+            "The address field is required."
+        ],
+        "driver_name": [
+            "The driver name field is required."
+        ],
+        "vehicle_plate": [
+            "The vehicle plate field is required."
+        ]
+    }
 }
 ```
 
-## Common Error Status Codes
-- **401 Unauthorized**: Authentication required or invalid token
-- **404 Not Found**: Resource does not exist
-- **422 Unprocessable Entity**: Validation errors
-- **500 Internal Server Error**: Server error
+### 401 Unauthorized
+```json
+{
+    "message": "Unauthenticated."
+}
+```
+
+### 404 Not Found
+```json
+{
+    "message": "The requested resource was not found."
+}
+```

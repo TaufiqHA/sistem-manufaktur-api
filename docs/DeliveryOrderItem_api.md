@@ -89,8 +89,8 @@ Accept: application/json
         }
     ],
     "links": {
-        "first": "http://your-api-domain.com/api/delivery-order-items?page=1",
-        "last": "http://your-api-domain.com/api/delivery-order-items?page=1",
+        "first": "https://your-api-domain.com/api/delivery-order-items?page=1",
+        "last": "https://your-api-domain.com/api/delivery-order-items?page=1",
         "prev": null,
         "next": null
     },
@@ -105,7 +105,7 @@ Accept: application/json
                 "active": false
             },
             {
-                "url": "http://your-api-domain.com/api/delivery-order-items?page=1",
+                "url": "https://your-api-domain.com/api/delivery-order-items?page=1",
                 "label": "1",
                 "active": true
             },
@@ -115,7 +115,7 @@ Accept: application/json
                 "active": false
             }
         ],
-        "path": "http://your-api-domain.com/api/delivery-order-items",
+        "path": "https://your-api-domain.com/api/delivery-order-items",
         "per_page": 10,
         "to": 1,
         "total": 1
@@ -196,10 +196,10 @@ Content-Type: application/json
 - `delivery_order_id` (required): ID of the delivery order (must exist in delivery_orders table)
 - `warehouse_id` (required): ID of the warehouse (must exist in finished_goods_warehouses table)
 - `project_id` (required): ID of the project (must exist in projects table)
-- `project_name` (required): Name of the project
-- `item_name` (required): Name of the item
+- `project_name` (required): Name of the project (string, max 255 characters)
+- `item_name` (required): Name of the item (string, max 255 characters)
 - `qty` (required): Quantity (integer, minimum 1)
-- `unit` (required): Unit of measurement (e.g., pcs, box, kg)
+- `unit` (required): Unit of measurement (string, max 50 characters)
 
 #### Response
 - **201 Created**: Successfully created the delivery order item
@@ -258,6 +258,15 @@ Content-Type: application/json
 }
 ```
 
+#### Fields
+- `delivery_order_id` (conditionally required): ID of the delivery order; only validated if provided (must exist in delivery_orders table)
+- `warehouse_id` (conditionally required): ID of the warehouse; only validated if provided (must exist in finished_goods_warehouses table)
+- `project_id` (conditionally required): ID of the project; only validated if provided (must exist in projects table)
+- `project_name` (conditionally required): Name of the project; only validated if provided (string, max 255 characters)
+- `item_name` (conditionally required): Name of the item; only validated if provided (string, max 255 characters)
+- `qty` (conditionally required): Quantity; only validated if provided (integer, minimum 1)
+- `unit` (conditionally required): Unit of measurement; only validated if provided (string, max 50 characters)
+
 #### Response
 - **200 OK**: Successfully updated the delivery order item
 - **404 Not Found**: Delivery order item not found
@@ -314,19 +323,24 @@ Accept: application/json
     "message": "The given data was invalid.",
     "errors": {
         "delivery_order_id": [
-            "The delivery order id field is required."
+            "The delivery order id field is required.",
+            "The selected delivery order id is invalid."
         ],
         "warehouse_id": [
-            "The warehouse id field is required."
+            "The warehouse id field is required.",
+            "The selected warehouse id is invalid."
         ],
         "project_id": [
-            "The project id field is required."
+            "The project id field is required.",
+            "The selected project id is invalid."
         ],
         "project_name": [
-            "The project name field is required."
+            "The project name field is required.",
+            "The project name field must not exceed 255 characters."
         ],
         "item_name": [
-            "The item name field is required."
+            "The item name field is required.",
+            "The item name field must not exceed 255 characters."
         ],
         "qty": [
             "The qty field is required.",
@@ -334,7 +348,8 @@ Accept: application/json
             "The qty field must be at least 1."
         ],
         "unit": [
-            "The unit field is required."
+            "The unit field is required.",
+            "The unit field must not exceed 50 characters."
         ]
     }
 }

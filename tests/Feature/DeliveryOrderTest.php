@@ -43,6 +43,8 @@ class DeliveryOrderTest extends TestCase
                          'address',
                          'driver_name',
                          'vehicle_plate',
+                         'status',
+                         'note',
                          'created_at',
                          'updated_at',
                      ]
@@ -70,6 +72,8 @@ class DeliveryOrderTest extends TestCase
                      'address' => $deliveryOrder->address,
                      'driver_name' => $deliveryOrder->driver_name,
                      'vehicle_plate' => $deliveryOrder->vehicle_plate,
+                     'status' => $deliveryOrder->status,
+                     'note' => $deliveryOrder->note,
                  ]);
     }
 
@@ -86,6 +90,8 @@ class DeliveryOrderTest extends TestCase
             'address' => '123 Test Street, Test City',
             'driver_name' => 'John Doe',
             'vehicle_plate' => 'ABC-1234',
+            'status' => 'draft',
+            'note' => 'This is a test note',
         ];
 
         // Make the request
@@ -99,6 +105,8 @@ class DeliveryOrderTest extends TestCase
                      'address' => $data['address'],
                      'driver_name' => $data['driver_name'],
                      'vehicle_plate' => $data['vehicle_plate'],
+                     'status' => $data['status'],
+                     'note' => $data['note'],
                  ]);
 
         // Assert the record was created in the database
@@ -108,6 +116,8 @@ class DeliveryOrderTest extends TestCase
             'address' => $data['address'],
             'driver_name' => $data['driver_name'],
             'vehicle_plate' => $data['vehicle_plate'],
+            'status' => $data['status'],
+            'note' => $data['note'],
         ]);
     }
 
@@ -170,6 +180,8 @@ class DeliveryOrderTest extends TestCase
             'address' => '456 Updated Street, Updated City',
             'driver_name' => 'Jane Doe',
             'vehicle_plate' => 'XYZ-5678',
+            'status' => 'validated',
+            'note' => 'Updated note',
         ];
 
         // Make the request
@@ -184,6 +196,8 @@ class DeliveryOrderTest extends TestCase
                      'address' => $data['address'],
                      'driver_name' => $data['driver_name'],
                      'vehicle_plate' => $data['vehicle_plate'],
+                     'status' => $data['status'],
+                     'note' => $data['note'],
                  ]);
 
         // Assert the record was updated in the database
@@ -194,6 +208,8 @@ class DeliveryOrderTest extends TestCase
             'address' => $data['address'],
             'driver_name' => $data['driver_name'],
             'vehicle_plate' => $data['vehicle_plate'],
+            'status' => $data['status'],
+            'note' => $data['note'],
         ]);
     }
 
@@ -208,11 +224,14 @@ class DeliveryOrderTest extends TestCase
         // Store original values
         $originalCode = $deliveryOrder->code;
         $originalCustomer = $deliveryOrder->customer;
+        $originalStatus = $deliveryOrder->status;
+        $originalNote = $deliveryOrder->note;
 
         // Prepare partial update data
         $data = [
             'date' => '2025-12-31 15:00:00',
             'driver_name' => 'Jane Doe',
+            'status' => 'send',
         ];
 
         // Make the request
@@ -224,7 +243,9 @@ class DeliveryOrderTest extends TestCase
                      'id' => $deliveryOrder->id,
                      'code' => $originalCode, // Should remain unchanged
                      'customer' => $originalCustomer, // Should remain unchanged
+                     'status' => $data['status'],
                      'driver_name' => $data['driver_name'],
+                     'note' => $originalNote, // Should remain unchanged
                  ]);
 
         // Assert the record was partially updated in the database
@@ -233,6 +254,8 @@ class DeliveryOrderTest extends TestCase
             'code' => $originalCode,
             'customer' => $originalCustomer,
             'driver_name' => $data['driver_name'],
+            'status' => $data['status'],
+            'note' => $originalNote,
         ]);
     }
 
@@ -254,6 +277,70 @@ class DeliveryOrderTest extends TestCase
         $this->assertDatabaseMissing('delivery_orders', [
             'id' => $deliveryOrder->id,
         ]);
+    }
+
+    public function test_can_create_delivery_order_with_valid_status(): void
+    {
+        // Authenticate the user
+        $this->actingAs($this->user, 'sanctum');
+
+        // Prepare data with valid status
+        $data = [
+            'code' => 'DO-TEST-12346',
+            'date' => '2025-12-31 10:00:00',
+            'customer' => 'Test Customer',
+            'address' => '123 Test Street, Test City',
+            'driver_name' => 'John Doe',
+            'vehicle_plate' => 'ABC-1234',
+            'status' => 'validated',
+            'note' => 'Test note for validation',
+        ];
+
+        // Make the request
+        $response = $this->postJson('/api/delivery-orders', $data);
+
+        // Assert the response
+        $response->assertStatus(201)
+                 ->assertJson([
+                     'code' => $data['code'],
+                     'status' => $data['status'],
+                     'note' => $data['note'],
+                 ]);
+
+        // Assert the record was created in the database
+        $this->assertDatabaseHas('delivery_orders', [
+            'code' => $data['code'],
+            'status' => $data['status'],
+            'note' => $data['note'],
+        ]);
+    }
+
+    public function test_cannot_create_delivery_order_with_invalid_status(): void
+    {
+        // Authenticate the user
+        $this->actingAs($this->user, 'sanctum');
+
+        // Prepare data with invalid status
+        $data = [
+            'code' => 'DO-TEST-12347',
+            'date' => '2025-12-31 10:00:00',
+            'customer' => 'Test Customer',
+            'address' => '123 Test Street, Test City',
+            'driver_name' => 'John Doe',
+            'vehicle_plate' => 'ABC-1234',
+            'status' => 'invalid_status',
+        ];
+
+        // Make the request
+        $response = $this->postJson('/api/delivery-orders', $data);
+
+        // Assert the response
+        $response->assertStatus(422)
+                 ->assertJson([
+                     'errors' => [
+                         'status' => ['The selected status is invalid.'],
+                     ]
+                 ]);
     }
 
     public function test_unauthenticated_user_cannot_access_delivery_orders(): void

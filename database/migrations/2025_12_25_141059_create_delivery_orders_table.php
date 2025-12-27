@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('address');
             $table->string('driver_name');
             $table->string('vehicle_plate');
+            $table->enum('status', ['draft', 'validated', 'send', 'archived'])->default('draft');
+            $table->text('note')->nullable();
             $table->timestamps(); // created_at & updated_at
         });
     }

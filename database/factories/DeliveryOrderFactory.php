@@ -23,6 +23,8 @@ class DeliveryOrderFactory extends Factory
             'address' => $this->faker->address(),
             'driver_name' => $this->faker->name(),
             'vehicle_plate' => $this->faker->bothify('???-####'),
+            'status' => $this->faker->randomElement(['draft', 'validated', 'send', 'archived']),
+            'note' => $this->faker->optional()->text(200),
         ];
     }
 }
