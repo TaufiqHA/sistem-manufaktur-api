@@ -12,6 +12,7 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ReceivingGoodController;
 use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\DeliveryOrderItemController;
+use App\Http\Controllers\SubAssembliesController;
 
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -122,4 +123,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [\App\Http\Controllers\BackupController::class, 'destroy']);
         Route::get('/{id}/download', [\App\Http\Controllers\BackupController::class, 'download']);
     });
+
+    // Sub Assemblies resource routes with sanctum middleware
+    Route::apiResource('sub-assemblies', SubAssembliesController::class);
 });
